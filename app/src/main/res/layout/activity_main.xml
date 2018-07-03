@@ -7,15 +7,8 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Teste"
-        android:textSize="36sp" />
-
-    <ImageView
-        android:id="@+id/image"
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>

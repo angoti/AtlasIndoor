@@ -9,6 +9,11 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
 import com.indooratlas.android.sdk.IALocation;
 import com.indooratlas.android.sdk.IALocationListener;
 import com.indooratlas.android.sdk.IALocationManager;
@@ -28,6 +33,11 @@ public class MainActivity extends AppCompatActivity implements IALocationListene
     private IAResourceManager mResourceManager;
     private ImageView mFloorPlanImage;
 
+    private LatLng mLocation;
+    private Integer mFloor;
+    private Circle mCircle;
+    private GoogleMap mMap;
+
     private static final String TAG = "desenvolvimento2";
 
     @Override
@@ -44,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements IALocationListene
 
         mFloorPlanImage = (ImageView) findViewById(R.id.image);
         mResourceManager = IAResourceManager.create(this);
+        mMap = ((com.google.android.gms.maps.MapView)findViewById(R.id.map)).getMap();
+
     }
 
     private void obtemPermissaoDoUsuario() {
@@ -62,6 +74,33 @@ public class MainActivity extends AppCompatActivity implements IALocationListene
         Log.d("desenvolvimento", "Latitude: " + localizacao.getLatitude());
         Log.d("desenvolvimento", "Longitude: " + localizacao.getLongitude());
         Log.d("desenvolvimento", "Floor number: " + localizacao.getFloorLevel());
+
+        final LatLng center = new LatLng(localizacao.getLatitude(), localizacao.getLongitude());
+
+        mFloor = localizacao.getFloorLevel();
+        mLocation = new LatLng(localizacao.getLatitude(), localizacao.getLongitude());
+
+        showLocationCircle(center, localizacao.getAccuracy());
+    }
+
+    private void showLocationCircle(LatLng center, double accuracyRadius) {
+        if (mCircle == null) {
+            // location can received before map is initialized, ignoring those updates
+            if (mMap != null) {
+                mCircle = mMap.addCircle(new CircleOptions()
+                        .center(center)
+                        .radius(accuracyRadius)
+                        .fillColor(0x801681FB)
+                        .strokeColor(0x800A78DD)
+                        .zIndex(1.0f)
+                        .visible(true)
+                        .strokeWidth(5.0f));
+            }
+        } else {
+            // move existing markers position to received location
+            mCircle.setCenter(center);
+            mCircle.setRadius(accuracyRadius);
+        }
     }
 
     @Override

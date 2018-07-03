@@ -33,6 +33,9 @@ dependencies {
 //Indoor Atlas
 dependencies {
     implementation 'com.indooratlas.android:indooratlas-android-sdk:2.7.1@aar'
+    implementation 'com.indooratlas.android:indooratlas-android-wayfinding:2.7.0@aar'
+
+    implementation 'com.google.android.gms:play-services-maps:8.1.0'
 }
 repositories {
     maven {
